@@ -1,7 +1,9 @@
 <?php
 // On génère une constante contenant le chemin vers la racine publique du projet
 define('ROOT', str_replace('index.php','',$_SERVER['SCRIPT_FILENAME']));
+// die(ROOT);
 // var_dump($_GET['p']);
+
 // On appelle le modèle et le contrôleur principaux
 require_once(ROOT.'app/Model.php');
 require_once(ROOT.'app/Controller.php');
@@ -19,13 +21,13 @@ if($params[0] != ""){
     $action = isset($params[1]) ? $params[1] : 'index';
 
     // On appelle le contrôleur
-    if (!( file_exists(ROOT . 'controllers/' . $controller . '.php')))
-    {
-        unset($params[0]);
+    // die(var_dump($controller));
+  if ( file_exists(ROOT . 'controllers/' . $controller . '.php'))
+  {
 
-    }else{
-        require_once(ROOT.'controllers/'.$controller.'.php');
-    }
+  }
+    require_once(ROOT.'controllers/'.$controller.'.php');
+    
     
 
     // On instancie le contrôleur
@@ -34,15 +36,21 @@ if($params[0] != ""){
     if(method_exists($controller, $action)){
         unset($params[0]);
         unset($params[1]);
+        
         call_user_func_array([$controller,$action], $params);
         // On appelle la méthode
         // $controller->$action();    
-    }else{
+    }elseif(!(method_exists($controller, $action))){
         // On envoie le code réponse 404
         http_response_code(404);
         echo "La page recherchée n'existe pas";
+
+        
+    }else{
+        $controller->index();
     }
-}else{
+}
+else{
     // Ici aucun paramètre n'est défini
     // On appelle le contrôleur par défaut
     require_once(ROOT.'controllers/Main.php');

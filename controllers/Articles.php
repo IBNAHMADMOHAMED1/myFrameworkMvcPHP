@@ -12,8 +12,11 @@ class Articles extends Controller{
 
         // On stocke la liste des articles dans $articles
         $articles = $this->Article->getAll();
+ 
+        // die (var_dump($articles));
 
         // On envoie les données à la vue index
+        // die(var_dump(compact('articles')));
         $this->render('index', compact('articles'));
     }
 
@@ -25,10 +28,11 @@ class Articles extends Controller{
      */
     public function lire(string $slug){
         // On instancie le modèle "Article"
+        // die(var_dump($slug));
         $this->loadModel('Article');
 
         // On stocke l'article dans $article
-        $article = $this->Article->findBySlug($slug);
+        $article = $this->Article->findId($slug);
 
         // On envoie les données à la vue lire
         $this->render('lire', compact('article'));
